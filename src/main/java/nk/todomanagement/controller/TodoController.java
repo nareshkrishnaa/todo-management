@@ -16,21 +16,21 @@ import java.util.List;
 public class TodoController {
     private TodoService todoService;
 
-    @PostMapping
+    @PostMapping //add todo - only admin -----
     public ResponseEntity<TodoDto> addTodo(@RequestBody TodoDto todoDto){
 
         TodoDto savedTodoDto=todoService.addTodo(todoDto);
         return new ResponseEntity<>(savedTodoDto, HttpStatus.CREATED);
 
     }
-    @GetMapping("{id}")
+    @GetMapping("{id}")//get todo : admin and user
     public ResponseEntity<TodoDto> getTodo(@PathVariable Long id){
 
         TodoDto todoDto=todoService.getTodo(id);
         return new ResponseEntity<>(todoDto,HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping //get all todo : admin and user
     public ResponseEntity<List<TodoDto>> getAllTodo(){
 
         List<TodoDto> todoDtoList = todoService.getAllTodo();
@@ -38,14 +38,26 @@ public class TodoController {
 
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")//update todo : only admin -------------
     public ResponseEntity<TodoDto> updateTodo(@PathVariable Long id,@RequestBody TodoDto todoDto){
         return  ResponseEntity.ok(todoService.updateTodo(id,todoDto));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}") // delete todo : only admin
     public ResponseEntity<String> deleteTodo(@PathVariable Long id){
         todoService.deleteTodo(id);
         return ResponseEntity.ok("user deleted");
+    }
+
+    @PatchMapping("{id}/completed")// completed todo : user and admin
+    public ResponseEntity<TodoDto> completedTodo(@PathVariable Long id){
+        TodoDto todoDto=todoService.completedTodo(id);
+        return ResponseEntity.ok(todoDto);
+    }
+
+    @PatchMapping("{id}/pending")//pending todo : admin and user
+    public ResponseEntity<TodoDto> pendingTodo(@PathVariable Long id){
+        TodoDto todoDto=todoService.pendingTodo(id);
+        return ResponseEntity.ok(todoDto);
     }
 }
